@@ -1,0 +1,22 @@
+name: Unit Tests
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  unit_tests:
+    name: Unit Tests
+    runs-on: macOS-13
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Select Xcode version
+        run: xcversion select `cat .xcode-version`
+      - name: Run Unit Tests
+        run: xcodebuild test -scheme NAVERMap -destination "OS=16.4,name=iPhone 14 Pro"
